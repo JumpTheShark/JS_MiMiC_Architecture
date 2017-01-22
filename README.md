@@ -14,15 +14,15 @@ As realized by architecture name, it separates the program on three logical part
 
 Now we describe the operating cycle of a program based on MiMiC architecture.
 
-* Firstly, any user requests a business task to be handled. The task with necessary arguments is served in the program's Control Unit. The last one knows about the connection of business tasks and special structures that describe business tasks technically, basing on executive tasks (formally the structue named *task package*). The CU selects appropriate mediator to execute the business task and gives to it respective task package with already hardcoded business arguments into the executive tasks.
+* Firstly, any user requests a business task to be handled. The task with necessary arguments is served in the program's Control Unit. The last one knows about the connection of business tasks and special structures that describe business tasks technically, basing on executive tasks (formally the structure is named *task package*). The CU selects appropriate mediator to execute the business task and gives to it respective task package with already hardcoded business arguments into the executive tasks.
 
-* Secondly, mediator to be chosen receives task package and put all executives tasks into the queue. As the time comes, executive tasks begin to be handled in order they are described. Tasks is able to share their output as argument to each other, within one task package.
+* Secondly, mediator to be chosen receives task package and put all executives tasks into the queue. As the time comes, executive tasks begin to be handled in order they are described. Tasks are able to share their output as argument for each other, within one task package.
 
-* The execution of a single execcutive task is followed by several notices:
+* The execution of a single executive task is followed by several notices:
  - Core is searching for mapping { executive task : module } to find the module for completing the task.
  - Module receives arguments that described for it. Argument can be hardcoded from CU or during the output return of another task.
- - During code execution, module is able to request some data without itself, by calling another executive task with arguments. Note that it is the only way to get something from outside the module code, *libraries direct using is denied*.
- - When module requests an outsource data, its execution is frozed until the data be got. Called executive task is put in task queue.
+ - During code execution, module is able to request some data without itself, by calling another executive task with arguments. Note that it is the only way to get something from outside the module code, *libraries direct using is forbidden*.
+ - When module requests an outsource data, its execution is frozed until the data be got. Called executive task is put in the task queue.
  - When completed, module can return only one result (or error), meaning that it can not be separated on two different datas as arguments.
 
 * When all of the tasks with taskpackage are completed, the final result (provided by the last task) is returned to the CU, which in turn will be sent to the user.
