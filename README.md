@@ -1,5 +1,7 @@
 # JS MiMiC Architecture
 
+<img src="https://github.com/GlaDos28/JS_MiMiC_Architecture/blob/master/mimic.jpg" alt="Image of Mimic" width="330" height="268">
+
 JavaScript *Module-Mediator-Controller* architecture (or *MiMiC*, *MMC*) is a way to create JS back-end programs in a specific ellegant style.
 
 The architecture is inspired by the Eddie Osmani pattern.
@@ -169,41 +171,51 @@ controller.make("business task name", {
 At least here is the mindless but full example that reveals all the notices:
 
 ```javascript
-const
-	print = function *() {
-		const args = yield; /* args.msg must exist */
+const print = function *() {
+	const args = yield; /* args.msg must exist */
 
-		console.log(args.msg);
-	},
-	greet = function *() {
-		yield;
+	console.log(args.msg);
+};
+```
 
-		yield {
-			str  : "print message",
-			args : { msg : "This is a program test." }
-		};
-	},
-	sum = function *() {
-		const args = yield; /* args.num1 and args.num2 must exist */
+```javascript
+const greet = function *() {
+	yield;
 
-		yield {
-			str  : "print message",
-			args : { msg : `Calculating the sum of ${args.num1} and ${args.num2}.` }
-		};
+	yield {
+		str  : "print message",
+		args : { msg : "This is a program test." }
+	};
+};
+```
 
-		return args.num1 + args.num2;
-	},
-	mult = function *() {
-		const args = yield; /* args.num1 and args.num2 must exist */
+```javascript
+const sum = function *() {
+	const args = yield; /* args.num1 and args.num2 must exist */
 
-		yield {
-			str  : "print message",
-			args : { msg : `Calculating the multiply of ${args.num1} and ${args.num2}.` }
-		};
-
-		return args.num1 * args.num2;
+	yield {
+		str  : "print message",
+		args : { msg : `Calculating the sum of ${args.num1} and ${args.num2}.` }
 	};
 
+	return args.num1 + args.num2;
+};
+```
+
+```javascript
+const mult = function *() {
+	const args = yield; /* args.num1 and args.num2 must exist */
+
+	yield {
+		str  : "print message",
+		args : { msg : `Calculating the multiply of ${args.num1} and ${args.num2}.` }
+	};
+
+	return args.num1 * args.num2;
+};
+```
+
+```javascript
 const controller = new Controller();
 
 controller.bindModule("print message",        print);
@@ -219,11 +231,11 @@ controller.bindTask("sum two numbers and double the result", [
 	{
 		str  : "sum two numbers",
 		args : {
-			num1 : {
+			num1 : { /* will be received from input */
 				mustBePut : true,
 				argId     : "number1"
 			},
-			num2 : {
+			num2 : { /* the same way */
 				mustBePut : true,
 				argId     : "number2"
 			}
@@ -233,11 +245,11 @@ controller.bindTask("sum two numbers and double the result", [
 	{
 		str  : "multiply two numbers",
 		args : {
-			num1 : {
+			num1 : { /* will be received from another task with mentioned in argId return name */
 				mustBeGot : true,
 				argId     : "numSum"
 			},
-			num2 : 2
+			num2 : 2 /* hardcoded constant */
 		}
 	}
 ]);
@@ -250,10 +262,48 @@ controller.make("sum two numbers and double the result", {
 });
 ```
 
+When creating a controller, this is one mediator to be initialized in the CU by default. To add new cores, use the command
+
+```javascript
+controller.addMediator();
+```
+
+Mediators not only provide parallelism, but used for replacement when another one crashes.
+
 ##### Using a library
 
-***TODO***
+As it was told earlier, using library functions directly in modules that not created only for library function not recommended and perhaps will be forbidden in future releases.
+
+For now it is recommended to create modules as an adapters for each library function and use a respective executive task instead of library calling. Why is it a better choice? At first, this way enables to track statistic of library callings. At second, it gives you an option to change the library function module during the CU working, i.e not restarting the program or swap all function-using modules to replace any of library functions to another implementation of another library.
+
+So the simplest examples:
+
+```javascript
+const print = function *() {
+	const args = yield; /* args.msg must exist */
+
+	console.log(args.msg);
+};
+```
+
+```javascript
+const random = function *() {
+	yield;
+	
+	return Math.random();
+};
+```
+
+These modules should hardly be replaced by new versions or etc., but this way allows to collect statistic about using these tools and unify the program to achieve maximum control.
 
 ##### Testing modules
 
 ***TODO***
+
+##### Hot swap technicue
+
+***Coming soon***
+
+##### Mining statistic
+
+***Coming soon***
