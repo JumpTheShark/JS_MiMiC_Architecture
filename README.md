@@ -1,6 +1,6 @@
 # JS MiMiC Architecture
 
-<img src="https://github.com/GlaDos28/JS_MiMiC_Architecture/blob/master/dungeon_and_gragons_mimic.jpg" alt="Image of Mimic from the game 'Dungeon & Dragons'" width="330" height="268">
+<img src="https://github.com/GlaDos28/JS_MiMiC_Architecture/blob/master/dungeon_and_dragons_mimic.jpg" alt="Image of Mimic from the game 'Dungeon & Dragons'" width="330" height="268">
 
 JavaScript *Module-Mediator-Controller* architecture (or *MiMiC*, *MMC*) is a way to create JS back-end programs in a specific ellegant style.
 
