@@ -82,7 +82,7 @@ Note that request is not attached to the module, but to the task by its formal n
 
 ***Coming soon***
 
-##### task package define
+##### Task package define
 
 As we noticed, user can only call business tasks to handle. Business tasks binded to the task packages which represents an array of executive tasks with some parameters.
 
@@ -124,4 +124,4 @@ testArg : {
 
 Note that ```mustBePut``` and ```mustBeGot``` properties in argument definition are keywords and can not be used for other reasons.
 
-***TODo continue***
+***TODO continue***
