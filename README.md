@@ -31,6 +31,8 @@ Now we describe the operating cycle of a program based on MiMiC architecture.
 
 * When all of the tasks with taskpackage are completed, the final result (provided by the last task) is returned to the CU, which in turn will be sent to the user.
 
+___
+
 ### How it works practically?
 
 As we talk about the JavaScript back-end language, let us show how to write modules with *Node.js* and *ECMAScript 6*.
