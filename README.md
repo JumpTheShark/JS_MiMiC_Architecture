@@ -118,7 +118,7 @@ If we want to declare any argument to be put from another executive task within 
 ```javascript
 testArg : {
 	mustBeGot : true,
-	argId     : "resArg" /* any name from another executive task returnName value */
+	argId     : "msg" /* any name from another executive task returnName value */
 }
 ```
 
