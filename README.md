@@ -272,7 +272,7 @@ Mediators not only provide parallelism, but used for replacement when another on
 
 ##### Using a library
 
-As it was told earlier, using library functions directly in modules that not created only for library function not recommended and perhaps will be forbidden in future releases.
+As it was told earlier, using library (and oter external function set) functions directly in modules that not created only for library function not recommended and perhaps will be forbidden in future releases.
 
 For now it is recommended to create modules as an adapters for each library function and use a respective executive task instead of library calling. Why is it a better choice? At first, this way enables to track statistic of library callings. At second, it gives you an option to change the library function module during the CU working, i.e not restarting the program or swap all function-using modules to replace any of library functions to another implementation of another library.
 
@@ -298,7 +298,51 @@ These modules should hardly be replaced by new versions or etc., but this way al
 
 ##### Testing modules
 
-***TODO***
+One of the architecture features is ability to test modules during their work even in production release. As new modules can be loaded through the CU dynamically, we will use modules as a testing base.
+
+Here is an example of how to make a test module for an executive task potential module:
+
+```javascript
+const sumSpec = function *() {
+	yield;
+	
+	/* tests */
+	
+	const res1 = yield {
+		str  : "sum two numbers",
+		args : {
+			num1 : 10,
+			num2 : 20
+		}
+	};
+	
+	if (res1 !== 30)
+		return `10 + 20 = 30, not ${res1}`;
+	
+	
+	const res2 = yield {
+		str  : "sum two numbers",
+		args : {
+			num1 : -1000,
+			num2 : 1000
+		}
+	};
+	
+	if (res2 !== 0)
+		return `-1000 + 1000 = 0, not ${res2}`;
+	
+	/* if all tests have been passed */
+	
+	return true;
+};
+```
+
+Although there is no restrictions of how to create testing modules, it is recommended to follow the next rules:
+
+* For executive task shortly named \<name\> the testing module should be named \<name\>Spec;
+* Testing module does not consume arguments;
+* Testing module does not call for any other tasks, than testing task;
+* When a mismatch occurs, string with explanation returns, otherwise returns ```true``` value.
 
 ##### Hot swap technicue
 
