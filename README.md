@@ -119,7 +119,7 @@ Note that request is not attached to the module, but to the task. The task name 
 
 ***Coming soon***
 
-##### Head module define
+##### Head module definition
 
 Remind that user can only call business tasks to handle. Business tasks binded to the head modules which do not differ technically from a common module implementation.
 
