@@ -1,3 +1,4 @@
 Version list:
 
-v1.0.0 - initial release (CURRENT VERSION)
+v1.1.0 - head modules instead of task packages, asynchronous external requests (CURRENT VERSION)
+v1.0.0 - initial release
