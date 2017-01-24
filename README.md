@@ -107,8 +107,8 @@ const module2 = function *() {
 These examples calls internally the executive task named `"get hello-world message"` which we define in `str` property, and returns the twice repeated hello-world message.
 
 The technical difference between synchronously and asynchronously request using is **only**
-* asyncId property in the yield scope when request data;
-* string instead of block {...} in the yield scope when get data value.
+* asyncId property is in the yield scope when request data;
+* string instead of block {...} is in the yield scope when get data value.
 That means cases ```yield ...;``` and ```<var> = yield ...;``` not determine request synchronization type.
 
 Also, when requiring async data put into the variable, the process will be frozen until the data is calculated. Requesting data by async id that was not requested in the first async scope causes an error.
