@@ -6,38 +6,40 @@ JavaScript *Module-Mediator-Controller* architecture (or *MiMiC*, *MMC*) is a wa
 
 The architecture is inspired by the Eddie Osmani pattern.
 
-### How it works on paper?
+### How does it work on paper?
 
-As realized by architecture name, the program is separated on three logical parts.
+As realized by architecture name, the application is separated on three logical parts.
 
-1. ***Module*** - an architecture unit, which implements the concrete task, formally named *executive task*. These and only these units form all the technical logic part of the program. Moreover, according to the architecture, modules are the only objects that changes between different programs, so the programmer needs to use only them to create his project - another code part is crearly defined and automated.
+1. ***Module*** - an architectural unit, that implements the concrete task, formally named *executive task*. ***Executive task*** - string formed task that represents a description to the technical process in a behavior-driven style. These and only these units form all the technical logic part of the program. Moreover, according to the architecture, modules are the only objects that changes between different programs, so the programmer needs to use only them to create his project - another code part is crearly defined and automated.
 
-2. ***Mediator*** (or ***Core***) - an architecture unit, which implements the execution of tasks handled by modules. Cores can be compared with processors in a computer that manage tasks and their completion. Mediators have their own task queue. These elements finalize the technical task part.
+2. ***Mediator*** (or ***Core***) - an architectural unit, that implements an execution of tasks handled by modules. Cores can be compared with processors in a computer that manage tasks and their completion. Mediators have their own executive *business task* queue. ***Business task*** - executive task with a description based on business logic, i.e declares a complete task with a homely conception, notwithstanding the absoluteness of meaning laid between business and technical tasks. One mediator handles only one business task at the same time, but the task itself can be parallelized.
 
-3. ***Control unit*** (***CU***, or ***Controller***) - an architecture unit, which implements the cores' manager system. It is also the communicator between business logic and technical implementation. The controller is only one for the project, against the potentially unlimited number of mediatros and modules. As it is the input point for program users, controller accepts human-written tasks, formally named *business tasks*. It consists of under-controlled core collection for executing the given tasks and mapping ```{ business task : executive tasks }```. This element finalizes the business task part.
+3. ***Control unit*** (***CU***, or ***Controller***) - an architectural unit, that implements cores' manager system. It is also the communicator between business logic and technical implementation. The controller is only one for the project, against the potentially unlimited number of mediators and modules. As it is the input point for program users, controller accepts business tasks to handle. It consists of under-controlled core collection for executing the given tasks, the collection of business tasks it can manage and a set of executive tasks mapped onto their respective modules. All mediators share the same mapping of executive tasks and modules within one Control Unit.
 
 ___
 
 Now we describe the operating cycle of a program based on MiMiC architecture.
 
-* Firstly, any user requests a business task to be handled. The task with necessary arguments is served in the program's Control Unit. The last one knows about the connection of business tasks and special structures that describe business tasks technically, basing on executive tasks (formally the structure is named *task package*). The CU selects appropriate mediator to execute the business task and gives to it respective task package with already hardcoded business arguments into the executive tasks.
+* Firstly, any user requests a business task to be handled. The task with necessary arguments (*business arguments*) is served in the program's Control Unit. As every business task in some sense is a sort of executive task, business tasks have a corresponding executive modules, called *Head modules*. ***Head module*** - module that only calls internally executive tasks related to its business task. The CU selects appropriate mediator to execute the business task and requests to handle it with the given arguments. Note that for mediators there is no sense between business and executive tasks - all of them cores handle equally.
 
-* Secondly, mediator to be chosen receives task package and put all executives tasks into the queue. As the time comes, executive tasks begin to be handled in order they are described. Tasks are able to share their output as argument for each other, within one task package.
+* Secondly, mediator to be chosen receives the task and put it into the queue. according to the queue, as the time comes, the task begins to be handled.
 
-* The execution of a single executive task is followed by several notices:
- - Core is searching for mapping ```{ executive task : module }``` to find the module for completing the task.
- - Module receives arguments that described for it. Argument can be hardcoded from CU or during the output return of another task.
- - During code execution, module is able to request some data without itself, by calling another executive task with arguments. Note that this is the only way to get something from outside the module code, *libraries direct using is not recommended and may be forbidden in future*.
- - When module requests an outsource data, its execution is frozed until the data be got. Called executive task is put in the task queue.
- - When completed, module can return only one result (or error), meaning that it can not be separated on two different datas as arguments.
+* The execution of a single task is followed by several notices:
+ - Core is searching for mapping of task and its related module to find one for completing the task.
+ - Module receives arguments that are given for the task.
+ - During code execution, module is able to request some data that is beoynd its task scope, by calling another task with arguments. Note that this is the only way to get something from outside the module code, *libraries ***direct*** using is not recommended and may be forbidden in future*.
+ - When module requests an outsource data its execution may be frozed until the data be got (***synchronized request***) or may continue instantly and then be frozen when the data result needs to be got (***asynchronized request***). Called executive task starts to be handled in the same process in the first case or in a new process otherwise.
+ - When completed, module returns the expected result. It can also return an error during its runtime. Note that errors occured in case of emergency situations (i.e based on bad input by the user) should be returned as a result to the user with all necessary description, despite of exceptions which cause to return a real error from a module author side.
 
-* When all of the tasks with taskpackage are completed, the final result (provided by the last task) is returned to the CU, which in turn will be sent to the user.
+* When the outer task (business task as fact) completes, the final result is returned to the user.
 
 ___
 
-### How it works practically?
+### How does it work practically?
 
 As we talk about the JavaScript back-end language, let us show how to write modules with *Node.js* and *ECMAScript 6*.
+
+JavaScript generators mechanism supplied with the extended variant of a yield instrument (i.e not discovered in *ECMAScript 6* specification), which allows to use yield as right value. All such uses followed with a comment tip at the first times.
 
 ##### First steps
 
@@ -45,94 +47,109 @@ Modules in JavaScript representation are perfectly implemented by JavaScript's *
 
 ```javascript
 const module1 = function *() {
-	const args = yield;
+	const args = yield; /* request input arguments */
 	return "Hello, world!!";
 },
 ```
 
-The module above demonstrates how to implement a simple task returning "Hello, world!!" message. You can see there `const args = yield;` line - this is how the module receives the ininial arguments. Note that every module **must** request input arguments before all other outsource requests in any case, even if there is no module arguments at all. In case of no arguments there is an option to write `yield;` instead:
+The module above demonstrates how to implement a simple task returning "Hello, world!!" message. You can see there `const args = yield;` line - this is how the module receives the ininial arguments. Note that every module **must** request input arguments before all other outsource requests in any case, even if there is no module arguments at all. In the absence of arguments there is an option to write `yield;` instead:
 
 
 ```javascript
 const module1 = function *() {
-	yield;
+	yield; /* request input arguments, but do not save them into a variable */
 	return "Hello, world!! Now with no saved arguments ;)";
 },
 ```
 
 ##### Outsource data request 
 
-When there is a need to get something from outside the module logic, the request mechanism is used:
+When there is a need to get something from outside the module task's logic, the request mechanism is used. As it was told, there is two ways of how to request some data based on synchronization choice.
+
+If we want to get the data **synchronously**:
 
 ```javascript
 const module2 = function *() {
-	yield;
+	yield; /* request arguments that are not used */
 	
+	/* request data from outside the module. The data will be put into <message> variable */
 	const message = yield {
-		str  : "get hello-world message",
-		args : {}
+		str  : "get hello-world message", /* task name */
+		args : {}                         /* task arguments */
 	};
 	
 	return `${message} ${message}`;
 },
 ```
 
-This example calls internally the executive task named `"get hello-world message"` which we define in `str` property, and returns the twice repeated hello-world message.
-Note that request is not attached to the module, but to the task by its formal name. The executive task name related to the module is binded to it during the Control Unit configuration.
+If we want to get the data **asynchronously**:
+
+```javascript
+const module2 = function *() {
+	yield; /* request arguments that are not used */
+	
+	/* request data from outside the module */
+	yield {
+		str     : "get hello-world message", /* task name */
+		args    : {},                        /* task arguments */
+		asyncId : "hello-world message"      /* id that is used later to get the result */
+	};
+	
+	...
+	
+	/* put requested data into the variable <message> */
+	const message = yield "hello-world message"; /* refers to the id that we send previously */
+	
+	return `${message} ${message}`;
+},
+```
+
+These examples calls internally the executive task named `"get hello-world message"` which we define in `str` property, and returns the twice repeated hello-world message.
+
+The technical difference between synchronously and asynchronously request using is **only**
+* asyncId property in the yield scope when request data;
+* string instead of block {...} in the yield scope when get data value.
+That means cases ```yield ...;``` and ```<var> = yield ...;``` not determine request synchronization type.
+
+Also, when requiring async data put into the variable, the process will be frozen until the data is calculated. Requesting data by async id that was not requested in the first async scope causes an error.
+
+Note that request is not attached to the module, but to the task. The task name related to the module is binded to it during the Control Unit configuration.
 
 ##### Throwing errors
 
 ***Coming soon***
 
-##### Task package define
+##### Head module define
 
-As we noticed, user can only call business tasks to handle. Business tasks binded to the task packages which represents an array of executive tasks with some parameters.
-
-```javascript
-const
-	exTask1 = {
-		str  : "get doubled hello-world message",
-		args : {}
-	},
-	exTask2 = ...
-
-const package = [exTask1, exTask2]; /* task package */
-```
-
-In general it is similair to how you describe it inside the module request.
-We can specify the result name indentificator to use it for pasting the result as an argument into another executive task:
+Remind that user can only call business tasks to handle. Business tasks binded to the head modules which do not differ technically from a common module implementation.
 
 ```javascript
-const exTask = {
-	str        : "get doubled hello-world message",
-	args       : {},
-	returnName : "msg"
+const headModule = function *() {
+	yield;
+
+	yield {
+		str  : "print message",
+		args : { msg : "hello" }
+	};
+
+	yield {
+		str  : "print message",
+		args : { msg : "world" }
+	};
 };
 ```
 
-If we want to declare any argument to be put in the input from user (as an input argument), then we should write argument this way:
+Though it is able to implement a head module equally to any common module, there is a list of recommendations for head module implementation:
 
-```javascript
-testArg : {
-	mustBePut : true,
-	argId     : "arg1" /* any name */
-}
-```
-
-If we want to declare any argument to be put from another executive task's result within one task package, then we should write argument this way:
-
-```javascript
-testArg : {
-	mustBeGot : true,
-	argId     : "msg" /* any name from another executive task returnName value */
-}
-```
-
-Note that ```mustBePut``` and ```mustBeGot``` properties in argument definition are keywords and can not be used for other reasons.
+* Head module consists predominantly of executive task requests among with input argument request and (optional) return value;
+* Except for requests, it is allowed to make basic calculations corresponding to the business logic of executive tasks' relation;
+* Request argument can be hardcoded, put from input or from the result of another task;
+* Head module result can be either a constant, one of the result values, initial arguments, their basic calculation or a conjunction of previously mentioned values;
+* It is also allowed to handle emergency situations to return an error description.
 
 ##### Control Unit preparation
 
-Now let us see how the described modules, task packages and also mediators are initiated in CU.
+Now let us see how the described modules, their execution and business tasks and also mediators are initiated in the CU.
 
 Initialization of the Control Unit:
 
@@ -146,16 +163,16 @@ const Controller = require("mimic").ControlUnit;
 const controller = new Controller();
 ```
 
-Binding the mapping ```{ executive task : module }```:
+Binding executive task to the module:
 
 ```javascript
 controller.bindModule("executive task name", module);
 ```
 
-Binding the mapping ```{ business task : task package }```:
+Binding business task to the head module:
 
 ```javascript
-controller.bindTask("business task name", taskPackage);
+controller.bindHeadModule("business task name", headModule);
 ```
 
 Executing the business task:
@@ -165,7 +182,7 @@ controller.make("business task name", {
 	arg1 : value1,
 	arg2 : value2,
 	...
-}, callBack);
+}, callBack); /* callBack: (result) => { ... } */
 ```
 
 At least here is the mindless but full example that reveals all the notices:
@@ -175,17 +192,6 @@ const print = function *() {
 	const args = yield; /* args.msg must exist */
 
 	console.log(args.msg);
-};
-```
-
-```javascript
-const greet = function *() {
-	yield;
-
-	yield {
-		str  : "print message",
-		args : { msg : "This is a program test." }
-	};
 };
 ```
 
@@ -216,43 +222,59 @@ const mult = function *() {
 ```
 
 ```javascript
+const part = function *() {
+	yield;
+
+	yield {
+		str  : "print message",
+		args : { msg : "The end of calculating." }
+	};
+};
+```
+
+```javascript
+const exampleModule = function *() {
+	const args = yield;
+
+	const sumRes = yield {
+		str  : "sum two numbers",
+		args : {
+			num1 : args.number1,
+			num2 : args.number2
+		}
+	};
+
+	yield {
+		str  : "multiply two numbers",
+		args : {
+			num1 : sumRes,
+			num2 : 2
+		},
+		asyncId : "mult"
+	};
+
+	const multRes = yield "mult";
+
+	yield {
+		str  : "display parting",
+		args : {}
+	};
+
+	return multRes;
+};
+```
+
+``` javascript
+const Controller = require("./patterns/MMC/ControlUnit");
+
 const controller = new Controller();
 
 controller.bindModule("print message",        print);
-controller.bindModule("display greeting",     greet);
 controller.bindModule("sum two numbers",      sum);
 controller.bindModule("multiply two numbers", mult);
+controller.bindModule("display parting",      part);
 
-controller.bindTask("sum two numbers and double the result", [
-	{
-		str  : "display greeting",
-		args : {}
-	},
-	{
-		str  : "sum two numbers",
-		args : {
-			num1 : { /* will be received from input */
-				mustBePut : true,
-				argId     : "number1"
-			},
-			num2 : { /* the same way */
-				mustBePut : true,
-				argId     : "number2"
-			}
-		},
-		returnName : "numSum"
-	},
-	{
-		str  : "multiply two numbers",
-		args : {
-			num1 : { /* will be received from another task with mentioned in argId return name */
-				mustBeGot : true,
-				argId     : "numSum"
-			},
-			num2 : 2 /* hardcoded constant */
-		}
-	}
-]);
+controller.bindHeadModule("sum two numbers and double the result", exampleModule);
 
 controller.make("sum two numbers and double the result", {
 	number1 : 2,
@@ -268,7 +290,7 @@ When creating a controller, this is one mediator to be initialized in the CU by 
 controller.addMediator();
 ```
 
-Mediators not only provide parallelism, but used for replacement when another one crashes.
+Mediators not only provide parallelism of business tasks handling, but used for replacement when another one crashes.
 
 ##### Using a library
 
