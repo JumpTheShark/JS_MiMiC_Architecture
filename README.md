@@ -143,7 +143,7 @@ Though it is able to implement a head module equally to any common module, there
 
 * Head module consists predominantly of executive task requests among with input argument request and (optional) return value;
 * Except for requests, it is allowed to make basic calculations corresponding to the business logic of executive tasks' relation;
-* Request argument can be hardcoded, put from input or pur from the result of another task;
+* Request argument can be hardcoded, put from input or put from the result of another task;
 * Head module result can be either a constant, one of the result values, initial arguments, their basic calculation or a conjunction of previously mentioned values;
 * It is also allowed to handle emergency situations to return an error description.
 
