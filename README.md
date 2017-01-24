@@ -290,7 +290,7 @@ When creating a controller, this is one mediator to be initialized in the CU by 
 controller.addMediator();
 ```
 
-Mediators not only provide parallelism of business tasks handling, but used for replacement when another one crashes.
+Mediators do not only provide parallelism of business tasks handling, but used for replacement when another one crashes.
 
 ##### Using a library
 
