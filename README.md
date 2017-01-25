@@ -2,7 +2,7 @@
 
 <img src="https://s29.postimg.org/joz32yqmf/dungeon_and_dragons_mimic.jpg" alt="Image of Mimic from the game 'Dungeon & Dragons'" width="330" height="268">
 
-JavaScript *Module-Mediator-Controller* architecture (or *MiMiC*, *MMC*) is a way to create JS back-end programs in a specific elegant style.
+JavaScript ***Module-Mediator-Controller*** architecture (or ***MiMiC***, ***MMC***) is a way to create JS back-end programs in a specific elegant style.
 
 The architecture is inspired by the Eddie Osmani pattern.
 
