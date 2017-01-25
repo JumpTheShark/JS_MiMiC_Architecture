@@ -1,8 +1,8 @@
 # JS MiMiC Architecture
 
-<img src="https://github.com/GlaDos28/JS_MiMiC_Architecture/blob/master/dungeon_and_dragons_mimic.jpg" alt="Image of Mimic from the game 'Dungeon & Dragons'" width="330" height="268">
+<img src="https://s29.postimg.org/joz32yqmf/dungeon_and_dragons_mimic.jpg" alt="Image of Mimic from the game 'Dungeon & Dragons'" width="330" height="268">
 
-JavaScript *Module-Mediator-Controller* architecture (or *MiMiC*, *MMC*) is a way to create JS back-end programs in a specific ellegant style.
+JavaScript *Module-Mediator-Controller* architecture (or *MiMiC*, *MMC*) is a way to create JS back-end programs in a specific elegant style.
 
 The architecture is inspired by the Eddie Osmani pattern.
 
@@ -27,8 +27,8 @@ Now we describe the operating cycle of a program based on MiMiC architecture.
 * The execution of a single task is followed by several notices:
  - Core is searching for mapping of task and its related module to find one for completing the task.
  - Module receives arguments that are given for the task.
- - During code execution, module is able to request some data that is beoynd its task scope, by calling another task with arguments. Note that this is the only way to get something from outside the module code, *libraries ***direct*** using is not recommended and may be forbidden in future*.
- - When module requests an outsource data its execution may be frozed until the data be got (***synchronized request***) or may continue instantly and then be frozen when the data result needs to be got (***asynchronized request***). Called executive task starts to be handled in the same process in the first case or in a new process otherwise.
+ - During code execution, module is able to request some data that is beyond its task scope, by calling another task with arguments. Note that this is the only way to get something from outside the module code, *libraries ***direct*** using is not recommended and may be forbidden in future*.
+ - When module requests an outsource data its execution may be frozen until the data be got (***synchronized request***) or may continue instantly and then be frozen when the data result needs to be got (***asynchronized request***). Called executive task starts to be handled in the same process in the first case or in a new process otherwise.
  - When completed, module returns the expected result. It can also return an error during its runtime. Note that errors occured in case of emergency situations (i.e based on bad input by the user) should be returned as a result to the user with all necessary description, despite of exceptions which cause to return a real error from a module author side.
 
 * When the outer task (business task as fact) completes, the final result is returned to the user.
@@ -49,7 +49,7 @@ Modules in JavaScript representation are perfectly implemented by JavaScript's *
 const module1 = function *() {
 	const args = yield; /* request input arguments */
 	return "Hello, world!!";
-},
+};
 ```
 
 The module above demonstrates how to implement a simple task returning "Hello, world!!" message. You can see there `const args = yield;` line - this is how the module receives the ininial arguments. Note that every module **must** request input arguments before all other outsource requests in any case, even if there is no module arguments at all. In the absence of arguments there is an option to write `yield;` instead:
@@ -59,7 +59,7 @@ The module above demonstrates how to implement a simple task returning "Hello, w
 const module1 = function *() {
 	yield; /* request input arguments, but do not save them into a variable */
 	return "Hello, world!! Now with no saved arguments ;)";
-},
+};
 ```
 
 ##### Outsource data request 
@@ -79,7 +79,7 @@ const module2 = function *() {
 	};
 	
 	return `${message} ${message}`;
-},
+};
 ```
 
 If we want to get the data **asynchronously**:
@@ -101,7 +101,7 @@ const module2 = function *() {
 	const message = yield "hello-world message"; /* refers to the id that we send previously */
 	
 	return `${message} ${message}`;
-},
+};
 ```
 
 These examples calls internally the executive task named `"get hello-world message"` which we define in `str` property, and returns the twice repeated hello-world message.
@@ -264,7 +264,7 @@ const exampleModule = function *() {
 };
 ```
 
-``` javascript
+```javascript
 const Controller = require("./patterns/MMC/ControlUnit");
 
 const controller = new Controller();
@@ -294,7 +294,7 @@ Mediators do not only provide parallelism of business tasks handling, but used f
 
 ##### Using a library
 
-As it was told earlier, using library (and oter external function set) functions directly in modules that not created only for library function not recommended and perhaps will be forbidden in future releases.
+As it was told earlier, using library (and other external function set) functions directly in modules that not created only for library function not recommended and perhaps will be forbidden in future releases.
 
 For now it is recommended to create modules as an adapters for each library function and use a respective executive task instead of library calling. Why is it a better choice? At first, this way enables to track statistic of library callings. At second, it gives you an option to change the library function module during the CU working, i.e not restarting the program or swap all function-using modules to replace any of library functions to another implementation of another library.
 
@@ -366,7 +366,7 @@ Although there is no restrictions of how to create testing modules, it is recomm
 * Testing module does not call for any other tasks, than testing task;
 * When a mismatch occurs, string with explanation returns, otherwise returns ```true``` value.
 
-##### Hot swap technicue
+##### Hot swap technique
 
 ***Coming soon***
 
