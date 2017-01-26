@@ -172,6 +172,7 @@ Second-level errors are *exceptions*.
 }
 ```
 
+Note that if any module calls a task that returns a weak error (all the same through ```yield```) and does not handle it by try-catch block, the error **becomes a first-level error** and shut down the business task execution and all dependent processes.
 To return such errors, modules must use the following structure in ```return``` statement:
 
 ```javascript
