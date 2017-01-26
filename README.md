@@ -8,7 +8,7 @@ The architecture is inspired by the Eddie Osmani pattern.
 
 ### How does it work on paper?
 
-As realized by architecture name, the application is separated on three logical parts.
+As realized by architecture name, the application is divided into three logical parts.
 
 1. ***Module*** - an architectural unit, that implements the concrete task, formally named *executive task*. ***Executive task*** - string formed task that represents a description to the technical process in a behavior-driven style. These and only these units form all the technical logic part of the program. Moreover, according to the architecture, modules are the only objects that changes between different programs, so the programmer needs to use only them to create his project - another code part is crearly defined and automated.
 
@@ -125,7 +125,7 @@ Remind the two types of errors.
 
 Framework offers the next way of handling errors.
 
-All errors are separated on three types:
+All errors are divided into three types:
 
 1. ***Fatal errors***, or ***First-level errors*** are errors that take place when an uncaught JavaScript error occurs within module. The business task process with all subrequest processes are shut down and callback function is called with the next structure:
 
