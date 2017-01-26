@@ -211,7 +211,7 @@ Though it is able to implement a head module equally to any common module, here 
 * Except for requests, it is allowed to make basic calculations corresponding to the business logic of executive tasks' relation;
 * Request argument can be hardcoded, put from input or put from the result of another task;
 * Head module result can be either a constant, one of the result values, initial arguments, their basic calculation or a conjunction of previously mentioned values;
-* Head module **must** check **all** business arguments on correctness (non-null checks, type checks, etc.) and return a weak error;
+* Head module **must** check **all** business arguments on correctness (non-null checks, type checks, etc.) and return a weak error if needed;
 * It is also allowed to handle emergency situations to return an error description.
 
 ##### Control Unit preparation
