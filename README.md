@@ -52,7 +52,7 @@ const module1 = function *() {
 };
 ```
 
-The module above demonstrates how to implement a simple task returning "Hello, world!!" message. You can see there `const args = yield;` line - this is how the module receives the ininial arguments. Note that every module **must** request input arguments before all other outsource requests in any case, even if there is no module arguments at all. In the absence of arguments there is an option to write `yield;` instead:
+The module above demonstrates how to implement a simple task returning "Hello, world!!" message. You can see there `const args = yield;` line - this is how the module receives the ininial arguments. Note that every module **must** request input arguments before all other outsource requests in any case, even if there are no module arguments at all. In the absence of arguments there is an option to write `yield;` instead:
 
 
 ```javascript
@@ -64,7 +64,7 @@ const module1 = function *() {
 
 ##### Outsource data request 
 
-When there is a need to get something from outside the module task's logic, the request mechanism is used. As it was told, there is two ways of how to request some data based on synchronization choice.
+When there is a need to get something from outside the module task's logic, the request mechanism is used. As it was told, there are two ways of how to request some data based on synchronization choice.
 
 If we want to get the data **synchronously**:
 
@@ -204,7 +204,7 @@ const headModule = function *() {
 };
 ```
 
-Though it is able to implement a head module equally to any common module, there is a list of recommendations for head module implementation:
+Though it is able to implement a head module equally to any common module, here is a list of recommendations for head module implementation:
 
 * Head module consists predominantly of executive task requests among with input argument request and (optional) return value;
 * Except for requests, it is allowed to make basic calculations corresponding to the business logic of executive tasks' relation;
@@ -425,7 +425,7 @@ const sumSpec = function *() {
 };
 ```
 
-Although there is no restrictions of how to create testing modules, it is recommended to follow the next rules:
+Although there are no restrictions of how to create testing modules, it is recommended to follow the next rules:
 
 * For executive task shortly named \<name\> the testing module should be named \<name\>Spec;
 * Testing module does not consume arguments;
