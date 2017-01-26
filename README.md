@@ -120,8 +120,8 @@ Note that request is not attached to the module, but to the task. The task name 
 Of course, there are no perfect working modules, and usually a lot of time is spent on their debugging. Moreover, every module can get a corrupt argument that does not allow to operate futher.
 
 Remind the two types of errors.
-- Whether any code can not work because of an unexpected error occurs (division by zero, nonexistent variable property), such cases called ***exceptions***. These errors are from a programmer side only;
-- Whether any code can not work because of an incorrect input that is allowed to be incorrect (for instance, nonexistent url from user's input), such cases called ***emergency situations***. There errors are from a user side only.
+- Whether some code can not work because of an unexpected error occurs (division by zero, nonexistent variable property), such cases called ***exceptions***. These errors are from a programmer side only;
+- Whether some code can not work because of an incorrect input that is allowed to be incorrect (for instance, nonexistent url from user's input), such cases called ***emergency situations***. There errors are from a user side only.
 
 Framework offers the next way of handling errors.
 
