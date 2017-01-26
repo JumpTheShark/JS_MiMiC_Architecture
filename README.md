@@ -133,7 +133,7 @@ All errors are separated on three types:
 {
 	isError    : true,
 	errorLevel : 1,
-	errorBody  : <JavaScript's Error structure>
+	errorBody  : ... /* e.g. new Error(...) */
 }
 ```
 
@@ -145,7 +145,7 @@ First-level errors are *exceptions*.
 {
 	isError    : true,
 	errorLevel : 2,
-	errorBody  : <JavaScript's Error structure>
+	errorBody  : ... /* e.g. new Error(...) */
 }
 ```
 
@@ -156,20 +156,19 @@ To return such errors, modules must use the following structure in ```return``` 
 {
 	isError     : true,
 	isEmergency : false,
-	errorBody   : <JavaScript's Error structure>
+	errorBody   : ... /* e.g. new Error(...) */
 }
 ```
 
 Second-level errors are *exceptions*.
 
-3. ***Weak errors***, or ***Third-level errors*** are errors that take place when module **returns** the special error structure, meaning that module can not do the expected operations because of unexpected problems (get content by url that does not exist, access denied during file reading, etc.). Such errors will not abord the businnes task, but a JavaScript error will be thrown into upper-called tasks and the error can be caught in try-catch block. If the last one does not happen, callback function is called with the next structure:
-
+3. ***Weak errors***, or ***Third-level errors*** are errors that take place when module **returns** the special error structure, meaning that module can not do the expected operations because of unexpected problems (get content by url that does not exist, access denied during file reading, etc.). Such errors will not abort the business task, but a JavaScript error will be thrown into upper-called tasks by using *JavaScript generators' error throw mechanism*, i.e through ```yield```. The error can be caught in try-catch block. If the last one does not happen, callback function is called with the next structure:
 
 ```javascript
 {
 	isError    : true,
 	errorLevel : 3,
-	errorBody  : <JavaScript's Error structure>
+	errorBody  : ... /* e.g. new Error(...) */
 }
 ```
 
@@ -179,7 +178,7 @@ To return such errors, modules must use the following structure in ```return``` 
 {
 	isError     : true,
 	isEmergency : true,
-	errorBody   : <JavaScript's Error structure>
+	errorBody   : ... /* e.g. new Error(...) */
 }
 ```
 
