@@ -117,7 +117,73 @@ Note that request is not attached to the module, but to the task. The task name 
 
 ##### Throwing errors
 
-***Coming soon***
+Of course, there are no perfect working modules, and usually a lot of time is spent on their debugging. Moreover, every module can get a corrupt argument that does not allow to operate futher.
+
+Remind the two types of errors.
+- Whether any code can not work because of an unexpected error occurs (division by zero, nonexistent variable property), such cases called ***exceptions***. These errors are from a programmer side only;
+- Whether any code can not work because of an incorrect input that is allowed to be incorrect (for instance, nonexistent url from user's input), such cases called ***emergency situations***. There errors are from a user side only.
+
+Framework offers the next way of handling errors.
+
+All errors are separated on three types:
+
+1. ***Fatal errors***, or ***First-level errors*** are errors that take place when an uncaught JavaScript error occurs within module. The business task process with all subrequest processes are shut down and callback function is called with the next structure:
+
+```javascript
+{
+	isError    : true,
+	errorLevel : 1,
+	errorBody  : <JavaScript's Error structure>
+}
+```
+
+First-level errors are *exceptions*.
+
+2. ***Errors***, or ***Second-level errors*** are errors that take place when module **returns** the special error structure, meaning that its working can not be continued and the business task must be aborted. The business task process with all subrequest processes are shut down and callback function is called with the next structure:
+
+```javascript
+{
+	isError    : true,
+	errorLevel : 2,
+	errorBody  : <JavaScript's Error structure>
+}
+```
+
+For example, these errors might be when in some input module receives ```null``` instead of a string that must not be ```null``` .
+To return such errors, modules must use the following structure in ```return``` statement:
+
+```javascript
+{
+	isError     : true,
+	isEmergency : false,
+	errorBody   : <JavaScript's Error structure>
+}
+```
+
+Second-level errors are *exceptions*.
+
+3. ***Weak errors***, or ***Third-level errors*** are errors that take place when module **returns** the special error structure, meaning that module can not do the expected operations because of unexpected problems (get content by url that does not exist, access denied during file reading, etc.). Such errors will not abord the businnes task, but a JavaScript error will be thrown into upper-called tasks and the error can be caught in try-catch block. If the last one does not happen, callback function is called with the next structure:
+
+
+```javascript
+{
+	isError    : true,
+	errorLevel : 3,
+	errorBody  : <JavaScript's Error structure>
+}
+```
+
+To return such errors, modules must use the following structure in ```return``` statement:
+
+```javascript
+{
+	isError     : true,
+	isEmergency : true,
+	errorBody   : <JavaScript's Error structure>
+}
+```
+
+Third-level errors are *emergency situations*.
 
 ##### Head module definition
 
@@ -145,6 +211,7 @@ Though it is able to implement a head module equally to any common module, there
 * Except for requests, it is allowed to make basic calculations corresponding to the business logic of executive tasks' relation;
 * Request argument can be hardcoded, put from input or put from the result of another task;
 * Head module result can be either a constant, one of the result values, initial arguments, their basic calculation or a conjunction of previously mentioned values;
+* Head module **must** check **all** business arguments on correctness (non-null checks, type checks, etc.) and return a weak error;
 * It is also allowed to handle emergency situations to return an error description.
 
 ##### Control Unit preparation
@@ -368,8 +435,38 @@ Although there is no restrictions of how to create testing modules, it is recomm
 
 ##### Hot swap technique
 
-***Coming soon***
+One of the advantages of MiMiC architecture is to swap binded modules to new ones while the application is still in work. In fact, there is no additional syntax, just rebind your task with another module:
+
+```javascript
+controller.bindModule("binded executive task", newModule);
+```
+
+or
+
+```javascript
+controller.bindHeadModule("binded business task", newHeadModule);
+```
+
+It works quite easy: every new request for execution the rebinded task will be done with a new module, but module processes whose tasks were started earlier than rebinding occured, will not be changed anyway.
 
 ##### Mining statistic
 
-***Coming soon***
+As the architecture grants an admirable control on the project, framework obtains the comprehensive statistic that is shareable with the user. Here is a list of available statistics:
+
+1. List of completed executive tasks in chronological order (total request number, task name, used modules, initial arguments, task results);
+2. List of completed executive tasks in 'most call number' sorted order (the same data);
+3. List of completed business tasks in chronological order (total request number, task names, used head modules, initial arguments, task results);
+4. List of completed business tasks in 'most call number' sorted order (the same data);
+5. List of single executive task usages in chronological order (total request number, used modules, initial arguments and task results);
+6. List of single business task usages in chronological order (total request number, used head modules, initial arguments and task results).
+
+In future releases there are as minimum seven great novations in statistic mining:
+* Task (module) execution time (total, execution time between each 'yield' call) measurement;
+* Task (module) execution memory (total, execution time between each 'yield' call) measurement;
+* Task execution date and start time;
+* Task (module) error number (an option for every completed task, whether it worked properly) with descriptions;
+* Modules' runtime relation trees. Consists of a graph for every completed task that shows modules' request hierarchy (with all needed information in nodes);
+* For every binded module whether it was tested;
+* Parameterized statistic requests: user choose what data (like initial arguments, results, etc.) to be shown in returned statistic, including graphs.
+
+This instrument will allow you to see tasks' 'bad locations' like congestions in time and memory leaks to optimize your application for best results.
