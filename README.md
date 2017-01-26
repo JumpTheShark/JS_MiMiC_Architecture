@@ -465,8 +465,8 @@ In future releases there are as minimum seven great novations in statistic minin
 * Task (module) execution memory (total, execution time between each 'yield' call) measurement;
 * Task execution date and start time;
 * Task (module) error number (an option for every completed task, whether it worked properly) with descriptions;
-* Modules' runtime relation trees. Consists of a graph for every completed task that shows modules' request hierarchy (with all needed information in nodes);
-* For every binded module whether it was tested;
-* Parameterized statistic requests: user choose what data (like initial arguments, results, etc.) to be shown in returned statistic, including graphs.
+* Modules' runtime relation trees. Consist of a graph (tree) for every completed task that shows modules' request hierarchy (with all needed information in nodes);
+* For every binded module, an option whether it was tested;
+* Parameterized statistic requests: user choose what data (initial arguments, results, etc.) is to be shown in returned statistic, including graphs.
 
-This instrument will allow you to see tasks' 'bad locations' like congestions in time and memory leaks to optimize your application for best results.
+This instrument will allow to see tasks' 'bad locations' like congestions in time and memory leaks in order to optimize your application for the best results.
