@@ -6,6 +6,8 @@ JavaScript ***Module-Mediator-Controller*** architecture (or ***MiMiC***, ***MMC
 
 The architecture takes inspirations from "JavaScript Design Patterns" by [Addy Osmani](https://addyosmani.com/resources/essentialjsdesignpatterns/book/#designpatternsjavascript).
 
+Here is a specification only. The framework with all data is available at [JS MiMiC Framework repository](https://github.com/JumpTheShark/JS_MiMiC_Framework).
+
 ### How does it work on paper?
 
 As realized by architecture name, the application is divided into three logical parts.
