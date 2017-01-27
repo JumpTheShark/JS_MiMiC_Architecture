@@ -4,15 +4,15 @@
 
 JavaScript ***Module-Mediator-Controller*** architecture (or ***MiMiC***, ***MMC***) is a way to create JS back-end programs in a specific elegant style.
 
-The architecture is inspired by the Eddie Osmani pattern.
+The architecture takes inspirations from "JavaScript Design Patterns" by [Addy Osmani](https://addyosmani.com/resources/essentialjsdesignpatterns/book/#designpatternsjavascript).
 
 ### How does it work on paper?
 
 As realized by architecture name, the application is divided into three logical parts.
 
-1. ***Module*** - an architectural unit, that implements the concrete task, formally named *executive task*. ***Executive task*** - string formed task that represents a description to the technical process in a behavior-driven style. These and only these units form all the technical logic part of the program. Moreover, according to the architecture, modules are the only objects that changes between different programs, so the programmer needs to use only them to create his project - another code part is crearly defined and automated.
+1. ***Module*** - an architectural unit that implements a certain task, formally named *executive task*. ***Executive task*** - a programmatic implementation of some part of business logic associated with a string-formed description. Module is the only unit in the architecture that implements business logic.. Moreover, modules are the only objects that change between different applications, so the programmer needs to use only them to create his project - other parts of working application code are business-abstract and could be formalized and/or automatically generated.
 
-2. ***Mediator*** (or ***Core***) - an architectural unit, that implements an execution of tasks handled by modules. Cores can be compared with processors in a computer that manage tasks and their completion. Mediators have their own executive *business task* queue. ***Business task*** - executive task with a description based on business logic, i.e declares a complete task with a homely conception, notwithstanding the absoluteness of meaning laid between business and technical tasks. One mediator handles only one business task at the same time, but the task itself can be parallelized.
+2. ***Mediator*** (or ***Core***) - an architectural unit, that handles the execution of executive tasks by respecrive modules. Mediators have their own executive *business task* queue. ***Business task*** - executive task with a description based on business logic, i.e declares a complete task with a homely conception, notwithstanding the absoluteness of meaning laid between business and technical tasks. One mediator handles only one business task at the same time, but the task itself can be parallelized.
 
 3. ***Control unit*** (***CU***, or ***Controller***) - an architectural unit, that implements cores' manager system. It is also the communicator between business logic and technical implementation. The controller is only one for the project, against the potentially unlimited number of mediators and modules. As it is the input point for program users, controller accepts business tasks to handle. It consists of under-controlled core collection for executing the given tasks, the collection of business tasks it can manage and a set of executive tasks mapped onto their respective modules. All mediators share the same mapping of executive tasks and modules within one Control Unit.
 
